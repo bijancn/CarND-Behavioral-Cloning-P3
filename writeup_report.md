@@ -2,7 +2,7 @@
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[model]: ./pictures/model.png "Model Visualization"
 [NVIDIA blog post]: https://devblogs.nvidia.com/deep-learning-self-driving-cars/
 
 ---
@@ -87,13 +87,10 @@ around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a
-convolution neural network with the following layers and layer sizes ...
+The final model architecture is as described above. Here is a
+visualization of the architecture
 
-Here is a visualization of the architecture (note: visualizing the
-architecture is optional according to the project rubric)
-
-![alt text][image1]
+![alt text][model]
 
 The final training looks like this
 ```
@@ -112,15 +109,17 @@ To capture good driving behavior, I started with the test data and then
 added my behavior in the corners where it was necessary. Here is an
 example image of center lane driving:
 
-![alt text][image2]
+![alt text][center_lane]
 
 To add recovery scenarios without recording to many of my likely flawed
 behavior, I added the side camera images with a correction factor of
 `0.10`. The factor was found experimentally by checking the driving
-behavior. I also checked the distribution of steering angles, c.f.
-`analyze_angles`, and found t
+behavior.
 
-![alt text][image1]
+I also checked the distribution of steering angles, c.f.
+`analyze_angles`, and found that
+
+![alt text][broken_dist]
 
 After the collection process, I had X number of data points. I then
 preprocessed this data by ...

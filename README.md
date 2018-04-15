@@ -2,11 +2,11 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Overview
----
-This repository contains starting files for the Behavioral Cloning Project.
+- [Video of this model driving](https://www.youtube.com/watch?v=oHLq4uueTrw)
 
-### Dependencies
+- [writeup_report.md][writeup_report.md]
+
+# Dependencies
 This lab requires:
 
 * [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
