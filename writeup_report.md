@@ -1,27 +1,9 @@
 # **Behavioral Cloning**
 
-## Writeup Template
-
----
-
-**Behavioral Cloning Project**
-
-The goals / steps of this project are the following:
-* Use the simulator to collect data of good driving behavior
-* Build, a convolution neural network in Keras that predicts steering angles from images
-* Train and validate the model with a training and validation set
-* Test that the model successfully drives around track one without leaving the road
-* Summarize the results with a written report
-
 [//]: # (Image References)
 
 [image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[NVIDIA blog post]: https://devblogs.nvidia.com/deep-learning-self-driving-cars/
 
 ---
 ### Files Submitted & Code Quality
@@ -43,7 +25,7 @@ python drive.py model.h5
 
 #### 3. Submission code is usable and readable
 
-The model.py file contains the code for training and saving the
+The `model.py` file contains the code for training and saving the
 convolution neural network. The file shows the pipeline I used for
 training and validating the model, and it contains comments to explain
 how the code works.
@@ -52,17 +34,17 @@ how the code works.
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes
-and depths between 32 and 128 (model.py lines 18-24)
-
-The model includes RELU layers to introduce nonlinearity (code line 20),
-and the data is normalized in the model using a Keras lambda layer (code
-line 18).
+The keras model is created in `setup_model`. It follows the recommended
+architecture of the [NVIDIA blog post].
+The data is normalized in the model using a Keras lambda layer and
+cropped at the top and bottom.
+The neural network itself consists of five convolutional layers, each
+followed by a nonlinear RELU function, and four fully connected layers.
+The first three layers have a 2x2 stride with a 5x5 kernel followed by
+two layers with a 3x3 kernel without stride.
+These configurations have been found empirically by the NVIDIA team.
 
 #### 2. Attempts to reduce overfitting in the model
-
-The model contains dropout layers in order to reduce overfitting
-(model.py lines 21).
 
 The model was trained and validated on different data sets to ensure
 that the model was not overfitting (code line 10-16). The model was
@@ -72,34 +54,29 @@ could stay on the track.
 #### 3. Model parameter tuning
 
 The model used an Adam optimizer, so the learning rate was not tuned
-manually (model.py line 25).
+manually. As an error measure, I chose `mean_absolute_error` to
+encourage the network to take a turn as errors are less heavily
+penalized than with `mean_squared_error`.
 
 #### 4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used
-a combination of center lane driving, recovering from the left and right
-sides of the road ...
-
-For details about how I created the training data, see the next section.
+I have started with the central images of the supplied test data
+(`data`). This got me until the dirt corner where the model preferred
+the offroad path. Thus I added some samples around this corner
+(`dirtcorner`). This threw it off-balance though, so I added some more
+content with `more` and `dirt_extra`.
 
 ### Model Architecture and Training Strategy
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to ...
+I was fairly confident in the NVIDIA architecture as it is a very simple
+set of layers that was already tested on real streets.
 
-My first step was to use a convolution neural network model similar to
-the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and
-steering angle data into a training and validation set. I found that my
-first model had a low mean squared error on the training set but a high
-mean squared error on the validation set. This implied that the model
-was overfitting.
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ...
+To monitor overfitting, I chose a validation split of 0.2. This showed
+that while the training loss did still improve slightly with more
+epochs, validation loss was saturated quickly. To have quicker
+iterations and avoid overfitting, I thus only chose 3 epochs.
 
 The final step was to run the simulator to see how well the car was
 driving around track one. There were a few spots where the vehicle fell
@@ -118,31 +95,32 @@ architecture is optional according to the project rubric)
 
 ![alt text][image1]
 
+The final training looks like this
+```
+Train on 14668 samples, validate on 3668 samples
+Epoch 1/3
+14668/14668 [==============================] - 80s 5ms/step - loss: 0.0858 - val_loss: 0.0690
+Epoch 2/3
+14668/14668 [==============================] - 85s 6ms/step - loss: 0.0754 - val_loss: 0.0774
+Epoch 3/3
+14668/14668 [==============================] - 84s 6ms/step - loss: 0.0710 - val_loss: 0.0637
+```
+
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one
-using center lane driving. Here is an example image of center lane
-driving:
+To capture good driving behavior, I started with the test data and then
+added my behavior in the corners where it was necessary. Here is an
+example image of center lane driving:
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right
-sides of the road back to center so that the vehicle would learn to ....
-These images show what a recovery looks like starting from ... :
+To add recovery scenarios without recording to many of my likely flawed
+behavior, I added the side camera images with a correction factor of
+`0.10`. The factor was found experimentally by checking the driving
+behavior. I also checked the distribution of steering angles, c.f.
+`analyze_angles`, and found t
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that
-this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
+![alt text][image1]
 
 After the collection process, I had X number of data points. I then
 preprocessed this data by ...

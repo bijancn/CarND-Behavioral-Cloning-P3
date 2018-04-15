@@ -43,6 +43,21 @@ def load_csv(folder):
         angles.append(right_angle)
   return np.array(images), np.array(angles)
 
+
+def load_data():
+  X_train, Y_train = load_csv('data/')
+  X_dirt, Y_dirt = load_csv('dirtcorner/')
+  X_dirt_extra, Y_dirt_extra = load_csv('dirt_extra/')
+  X_extra, Y_extra = load_csv('more/')
+  X_train = np.append(X_train, X_dirt, axis=0)
+  Y_train = np.append(Y_train, Y_dirt, axis=0)
+  X_train = np.append(X_train, X_extra, axis=0)
+  Y_train = np.append(Y_train, Y_extra, axis=0)
+  X_train = np.append(X_train, X_dirt_extra, axis=0)
+  Y_train = np.append(Y_train, Y_dirt_extra, axis=0)
+  return X_train, Y_train
+
+
 def setup_model():
   model = Sequential()
   model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
@@ -70,19 +85,8 @@ def analyze_angles(Y_train):
 
 
 if __name__ == "__main__":
-  X_train, Y_train = load_csv('data/')
-  X_dirt, Y_dirt = load_csv('dirtcorner/')
-  X_dirt_extra, Y_dirt_extra = load_csv('dirt_extra/')
-  X_extra, Y_extra = load_csv('more/')
-  X_train = np.append(X_train, X_dirt, axis=0)
-  Y_train = np.append(Y_train, Y_dirt, axis=0)
-  X_train = np.append(X_train, X_extra, axis=0)
-  Y_train = np.append(Y_train, Y_extra, axis=0)
-  X_train = np.append(X_train, X_dirt_extra, axis=0)
-  Y_train = np.append(Y_train, Y_dirt_extra, axis=0)
-
+  X_train, Y_train = load_data()
   analyze_angles(Y_train)
-
   model = setup_model()
   model.fit(X_train, Y_train,
             validation_split=0.2,
