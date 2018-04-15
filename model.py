@@ -10,11 +10,13 @@ import seaborn as sb
 from keras.models import *
 from keras.layers import *
 
+
 def load_image(folder, source_path):
   filename = os.path.basename(source_path)
   new_path = folder + 'IMG/' + filename
   image = cv2.imread(new_path)
   return image # this is in BGR format
+
 
 def load_csv(folder):
   lines = []
@@ -27,7 +29,7 @@ def load_csv(folder):
     angles = []
     for l in lines:
       center_angle = float(l[3])
-      if abs(center_angle) > 0.001:
+      if abs(center_angle) > 0.001:     # ignore lazy straight driving
         left_angle = center_angle + correction
         right_angle = center_angle - correction
         img_center = load_image(folder, l[0])
@@ -60,6 +62,13 @@ def setup_model():
   model.compile(loss='mean_absolute_error', optimizer='adam')
   return model
 
+
+def analyze_angles(Y_train):
+  sb.distplot(Y_train)
+  plt.savefig('dist.png')
+  print(np.mean(Y_train))
+
+
 if __name__ == "__main__":
   X_train, Y_train = load_csv('data/')
   X_dirt, Y_dirt = load_csv('dirtcorner/')
@@ -71,9 +80,9 @@ if __name__ == "__main__":
   Y_train = np.append(Y_train, Y_extra, axis=0)
   X_train = np.append(X_train, X_dirt_extra, axis=0)
   Y_train = np.append(Y_train, Y_dirt_extra, axis=0)
-  sb.distplot(Y_train)
-  plt.savefig('dist.png')
-  print(np.mean(Y_train))
+
+  analyze_angles(Y_train)
+
   model = setup_model()
   model.fit(X_train, Y_train,
             validation_split=0.2,
