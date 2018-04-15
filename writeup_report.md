@@ -62,17 +62,28 @@ manually. As an error measure, I chose `mean_absolute_error` to
 encourage the network to take a turn as errors are less heavily
 penalized than with `mean_squared_error`.
 
-### Appropriate training data
+### Creation of appropriate training data & training process
 
-I have started with the central images of the supplied test data
-(`data`). This got me until the dirt corner where the model preferred
+To capture good driving behavior, I started with the test data (`data`)
+and then added my behavior in the corners where it was necessary.
+The test data got me until the dirt corner where the model preferred
 the offroad path. Thus I added some samples around this corner
 (`dirtcorner`). This threw it off-balance though, so I added some more
 content with `more` and `dirt_extra`.
 
+To add recovery scenarios without recording to many of my likely flawed
+behavior, I added the side camera images with a correction factor of
+`0.10`. The factor was found experimentally by checking the driving
+behavior.
+
+After initial collection process, I had ~30.000 number of data points.
+The preprocessing has been done in the first layer of the model as
+described above. I randomly shuffled the data set and put 20% of the
+data into a validation set.
+
 ### Solution Design Approach
 
-I was fairly confident in the NVIDIA architecture as it is a very simple
+I was fairly confident in the NVIDIA architecture as it is a simple
 set of layers that was already tested on real streets.
 
 To monitor overfitting, I chose a validation split of 0.2. This showed
@@ -109,27 +120,3 @@ Epoch 2/3
 Epoch 3/3
 14668/14668 [==============================] - 84s 6ms/step - loss: 0.0710 - val_loss: 0.0637
 ```
-
-### Creation of the Training Set & Training Process
-
-To capture good driving behavior, I started with the test data and then
-added my behavior in the corners where it was necessary. Here is an
-example image of center lane driving:
-
-![alt text][center_lane]
-
-To add recovery scenarios without recording to many of my likely flawed
-behavior, I added the side camera images with a correction factor of
-`0.10`. The factor was found experimentally by checking the driving
-behavior.
-
-After the collection process, I had X number of data points. I then
-preprocessed this data by ...
-
-I finally randomly shuffled the data set and put Y% of the data into a
-validation set.
-
-I used this training data for training the model. The validation set
-helped determine if the model was over or under fitting. The ideal
-number of epochs was Z as evidenced by ... I used an adam optimizer so
-that manually training the learning rate wasn't necessary.
