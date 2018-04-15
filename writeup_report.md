@@ -5,10 +5,9 @@
 [model]: ./pictures/model.png "Model Visualization"
 [NVIDIA blog post]: https://devblogs.nvidia.com/deep-learning-self-driving-cars/
 
----
-### Files Submitted & Code Quality
+## Files Submitted & Code Quality
 
-#### 1. Submission includes all required files
+### 1. Submission includes all required files
 
 My project includes the following files:
 * `model.py` containing the script to create and train the model
@@ -17,7 +16,7 @@ My project includes the following files:
 * `writeup_report.md` or writeup_report.pdf summarizing the results
 * [Video of this model driving](https://www.youtube.com/watch?v=oHLq4uueTrw)
 
-#### 2. Submission includes functional code
+### 2. Submission includes functional code
 Using the Udacity provided simulator and my `drive.py` file, the car can
 be driven autonomously around the track by executing
 ```sh
@@ -26,16 +25,16 @@ python drive.py model.h5
 (I doubled the speed as it made no difference in when the car goes
 offtrack)
 
-#### 3. Submission code is usable and readable
+### 3. Submission code is usable and readable
 
 The `model.py` file contains the code for training and saving the
 convolution neural network. The file shows the pipeline I used for
 training and validating the model, and it contains comments to explain
 how the code works.
 
-### Model Architecture and Training Strategy
+## Model Architecture and Training Strategy
 
-#### 1. An appropriate model architecture has been employed
+### An appropriate model architecture has been employed
 
 The keras model is created in `setup_model`. It follows the recommended
 architecture of the [NVIDIA blog post].
@@ -47,21 +46,21 @@ The first three layers have a 2x2 stride with a 5x5 kernel followed by
 two layers with a 3x3 kernel without stride.
 These configurations have been found empirically by the NVIDIA team.
 
-#### 2. Attempts to reduce overfitting in the model
+### Attempts to reduce overfitting in the model
 
-The model was trained and validated on different data sets to ensure
-that the model was not overfitting (code line 10-16). The model was
-tested by running it through the simulator and ensuring that the vehicle
-could stay on the track.
+The model was trained and validated on four different data sets to ensure
+that the model was not overfitting. The model was tested by running it
+through the simulator and ensuring that the vehicle could stay on the
+track.
 
-#### 3. Model parameter tuning
+### Model parameter tuning
 
 The model used an Adam optimizer, so the learning rate was not tuned
 manually. As an error measure, I chose `mean_absolute_error` to
 encourage the network to take a turn as errors are less heavily
 penalized than with `mean_squared_error`.
 
-#### 4. Appropriate training data
+### Appropriate training data
 
 I have started with the central images of the supplied test data
 (`data`). This got me until the dirt corner where the model preferred
@@ -69,9 +68,7 @@ the offroad path. Thus I added some samples around this corner
 (`dirtcorner`). This threw it off-balance though, so I added some more
 content with `more` and `dirt_extra`.
 
-### Model Architecture and Training Strategy
-
-#### 1. Solution Design Approach
+### Solution Design Approach
 
 I was fairly confident in the NVIDIA architecture as it is a very simple
 set of layers that was already tested on real streets.
@@ -88,7 +85,7 @@ off the track... to improve the driving behavior in these cases, I ....
 At the end of the process, the vehicle is able to drive autonomously
 around the track without leaving the road.
 
-#### 2. Final Model Architecture
+### Final Model Architecture
 
 The final model architecture is as described above. Here is a
 visualization of the architecture
@@ -106,7 +103,7 @@ Epoch 3/3
 14668/14668 [==============================] - 84s 6ms/step - loss: 0.0710 - val_loss: 0.0637
 ```
 
-#### 3. Creation of the Training Set & Training Process
+### Creation of the Training Set & Training Process
 
 To capture good driving behavior, I started with the test data and then
 added my behavior in the corners where it was necessary. Here is an
