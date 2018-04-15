@@ -4,6 +4,8 @@
 
 [model]: ./pictures/model.png "Model Visualization"
 [NVIDIA blog post]: https://devblogs.nvidia.com/deep-learning-self-driving-cars/
+[broken_dist]: ./pictures/broken_distribution.png
+[good_dist]: ./pictures/corrected_distribution.png
 
 ## Files Submitted & Code Quality
 
@@ -78,12 +80,17 @@ that while the training loss did still improve slightly with more
 epochs, validation loss was saturated quickly. To have quicker
 iterations and avoid overfitting, I thus only chose 3 epochs.
 
-The final step was to run the simulator to see how well the car was
-driving around track one. There were a few spots where the vehicle fell
-off the track... to improve the driving behavior in these cases, I ....
+One major finding in analyzing problems with the model was that my test
+set was dominated by *lazy straight ahead driving*:
 
-At the end of the process, the vehicle is able to drive autonomously
-around the track without leaving the road.
+![alt text][broken_dist]
+
+This was however the least important piece of data I wanted the model to
+learn. Thus, I removed all images with a steering angle `< 0.001`, which
+was about half of the sample. This gave a lot more sensible distribution
+of steering angles:
+
+![alt text][good_dist]
 
 ### Final Model Architecture
 
@@ -115,11 +122,6 @@ To add recovery scenarios without recording to many of my likely flawed
 behavior, I added the side camera images with a correction factor of
 `0.10`. The factor was found experimentally by checking the driving
 behavior.
-
-I also checked the distribution of steering angles, c.f.
-`analyze_angles`, and found that
-
-![alt text][broken_dist]
 
 After the collection process, I had X number of data points. I then
 preprocessed this data by ...
