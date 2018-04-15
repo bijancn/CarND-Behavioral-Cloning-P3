@@ -4,7 +4,7 @@
 
 - [Video of this model driving](https://www.youtube.com/watch?v=oHLq4uueTrw)
 
-- [writeup_report.md][writeup_report.md]
+- [Writeup](writeup_report.md)
 
 # Dependencies
 This lab requires:
@@ -12,6 +12,12 @@ This lab requires:
 * [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
 
 ## Details About Files In This Directory
+
+### `drive.py`
+To train the model, just run
+```sh
+python model.py
+```
 
 ### `drive.py`
 Once the model has been saved, it can be used with drive.py using this
