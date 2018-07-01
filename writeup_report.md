@@ -120,3 +120,137 @@ Epoch 2/3
 Epoch 3/3
 14668/14668 [==============================] - 84s 6ms/step - loss: 0.0710 - val_loss: 0.0637
 ```
+
+
+### 2018-06-30 12:54
+Loss doesnt go below 0.07. It looks like more epochs could help
+Time:
+real    22m47.518s
+user    14m3.780s
+sys     5m21.340s
+Epoch 1693/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.1971                                                                                                                                                                      Epoch 1694/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.1032                                                                                                                                                                      Epoch 1695/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.2520
+
+Model drives almost straight and thus goes out on the right side
+
+### 2018-06-30 12:54
+#### Changes
+- Increased epochs from 5 to 7
+- samples_per_epoch=sample_size and nb_epochs=7
+#### Observations
+- Now we have about 4 minutes per epoch and more constant loss result
+
+Epoch 1/7
+67800/67800 [==============================] - 262s - loss: 0.2152
+Epoch 2/7
+67800/67800 [==============================] - 258s - loss: 0.1921
+Epoch 3/7
+67800/67800 [==============================] - 258s - loss: 0.1811
+Epoch 4/7
+67800/67800 [==============================] - 258s - loss: 0.1761
+Epoch 5/7
+67800/67800 [==============================] - 258s - loss: 0.1882
+Epoch 6/7
+67800/67800 [==============================] - 258s - loss: 0.1760
+Epoch 7/7
+67800/67800 [==============================] - 258s - loss: 0.1665
+
+So it still improves even in the 7th epoch
+
+Model driving behavior has improved somewhat but still makes a pretty
+dumb impression
+#### Conclusions
+- So probably no performance change from the reorganization
+- More epochs could still help
+
+### 2018-06-30 13:31
+#### Changes
+- Increased epochs from 7 to 10
+- Removed straight driving filter and left and right images
+#### Observations
+Epoch 1/10
+37200/37200 [==============================] - 149s - loss: 0.1910
+Epoch 2/10
+37200/37200 [==============================] - 144s - loss: 0.1327
+Epoch 3/10
+37200/37200 [==============================] - 144s - loss: 0.1253
+Epoch 4/10
+37200/37200 [==============================] - 144s - loss: 0.1267
+Epoch 5/10
+37200/37200 [==============================] - 144s - loss: 0.1203
+Epoch 6/10
+37200/37200 [==============================] - 144s - loss: 0.1162
+Epoch 7/10
+37200/37200 [==============================] - 144s - loss: 0.1264
+Epoch 8/10
+37200/37200 [==============================] - 144s - loss: 0.1220
+Epoch 9/10
+37200/37200 [==============================] - 144s - loss: 0.1189
+Epoch 10/10
+37200/37200 [==============================] - 144s - loss: 0.1188
+
+Model actively stears off to the right side.
+#### Conclusions
+- While the loss itself is lower the behavior looked straight up wrong
+
+### 2018-06-30 14:46
+#### Changes
+- Increased epochs from 10 to 20
+- Readded left and right images (kept straight driving filter out)
+#### Observations
+Epoch 1/20
+111600/111600 [==============================] - 437s - loss: 0.1716
+Epoch 2/20
+111600/111600 [==============================] - 436s - loss: 0.1527
+Epoch 3/20
+111600/111600 [==============================] - 438s - loss: 0.1435
+Epoch 4/20
+111600/111600 [==============================] - 442s - loss: 0.1529
+Epoch 5/20
+111600/111600 [==============================] - 435s - loss: 0.1394
+Epoch 6/20
+111600/111600 [==============================] - 446s - loss: 0.1498
+Epoch 7/20
+111600/111600 [==============================] - 443s - loss: 0.1495
+Epoch 8/20
+111600/111600 [==============================] - 436s - loss: 0.1489
+Epoch 9/20
+111600/111600 [==============================] - 433s - loss: 0.1421
+Epoch 10/20
+111600/111600 [==============================] - 433s - loss: 0.1405
+Epoch 11/20
+111600/111600 [==============================] - 436s - loss: 0.1502
+Epoch 12/20
+111600/111600 [==============================] - 448s - loss: 0.1500
+Epoch 13/20
+111600/111600 [==============================] - 458s - loss: 0.1539
+Epoch 14/20
+111600/111600 [==============================] - 447s - loss: 0.1528
+Epoch 15/20
+111600/111600 [==============================] - 460s - loss: 0.1512
+Epoch 16/20
+111600/111600 [==============================] - 477s - loss: 0.1371
+Epoch 17/20
+111600/111600 [==============================] - 478s - loss: 0.1243
+Epoch 18/20
+111600/111600 [==============================] - 444s - loss: 0.1269
+Epoch 19/20
+111600/111600 [==============================] - 446s - loss: 0.1192
+Epoch 20/20
+111600/111600 [==============================] - 438s - loss: 0.1124
+
+Car steered crazily to the right side. It looks to me like this was the
+straight-ahead right/left copy that thought the model that.
+
+### Ideas to improve
+
+These two are correlated
+- Try if it improves without filtering the straight driving
+- Try if it improves without left and right images
+
+- Make more data?
+- More dropout? Less dropout? Currently we drop 10 % twice
+- Is the shuffling really working? Is it important?
+
+### Bad ideas
+- Increase batch size a bit to squeeze out more performance. 200 works,
+  1000 does not. Naah nvidia-smi shows 3805MiB /  4036MiB
