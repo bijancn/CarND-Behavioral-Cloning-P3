@@ -5,6 +5,7 @@ import cv2
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 import seaborn as sb
 import itertools as it
 from itertools import *
@@ -54,8 +55,15 @@ def batch(generator, size=batch_size):
     acc_x.append(x)
     acc_y.append(y)
     if len(acc_x) == size:
+      acc_x, acc_y = shuffle(acc_x, acc_y)
       yield np.array(acc_x), np.array(acc_y)
       acc_x, acc_y = [], []
+
+def shuffle(a,b):
+  c = list(zip(a, b))
+  random.shuffle(c)
+  a, b = zip(*c)
+  return (a, b)
 
 def batch_endless(generator, size=batch_size):
   gen, gen_backed = tee(generator)
@@ -66,6 +74,7 @@ def batch_endless(generator, size=batch_size):
       acc_x.append(x)
       acc_y.append(y)
       if len(acc_x) == size:
+        acc_x, acc_y = shuffle(acc_x, acc_y)
         yield np.array(acc_x), np.array(acc_y)
         acc_x, acc_y = [], []
     gen, gen_backed = tee(gen_backed)
@@ -86,11 +95,11 @@ def load_data(batch_func=batch):
 
 
 def setup_model():
-  fraction_to_drop = 0.10
+  # fraction_to_drop = 0.10
   model = Sequential()
   model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
   # 50 from top, 20 from bottom, nothing from the sides
-  model.add(Cropping2D(cropping=((50,20), (0,0))))
+  model.add(Cropping2D(cropping=((70,25), (0,0))))
   # model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
   # 5 conv nets
   model.add(Convolution2D(24,5,5,subsample=(2,2),activation="relu"))
