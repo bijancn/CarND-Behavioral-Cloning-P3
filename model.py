@@ -77,10 +77,11 @@ def load_data(batch_func=batch):
   generator_dirt_extra = load_csv('dirt_extra/')
   generator_extra = load_csv('more/')
   generator_jungle = load_csv('jungle/')
+  generator_moar = load_csv('moar/')
   # generator_extra_round = load_csv('extra_round/')
   generator = chain(generator_train, generator_dirt,
                     generator_dirt_extra, generator_extra,
-                    generator_jungle)
+                    generator_jungle, generator_moar)
   return batch_func(generator)
 
 
@@ -88,21 +89,21 @@ def setup_model():
   fraction_to_drop = 0.10
   model = Sequential()
   model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
-  # 50 from top 20 from bottom nothing from the sides
+  # 50 from top, 20 from bottom, nothing from the sides
   model.add(Cropping2D(cropping=((50,20), (0,0))))
-  model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
+  # model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
   # 5 conv nets
-  model.add(Convolution2D(24,5,5,subsample=(2,2),activation="tanh"))
-  model.add(Convolution2D(36,5,5,subsample=(2,2),activation="tanh"))
-  model.add(Convolution2D(48,5,5,subsample=(2,2),activation="tanh"))
-  model.add(Convolution2D(64,3,3,activation="tanh"))
-  model.add(Convolution2D(64,3,3,activation="tanh"))
+  model.add(Convolution2D(24,5,5,subsample=(2,2),activation="relu"))
+  model.add(Convolution2D(36,5,5,subsample=(2,2),activation="relu"))
+  model.add(Convolution2D(48,5,5,subsample=(2,2),activation="relu"))
+  model.add(Convolution2D(64,3,3,activation="relu"))
+  model.add(Convolution2D(64,3,3,activation="relu"))
   model.add(Flatten())
-  model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
+  # model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
   # 4 fully connected
-  model.add(Dense(100,activation="tanh"))
-  model.add(Dense(50,activation="tanh"))
-  model.add(Dense(10,activation="tanh"))
+  model.add(Dense(100,activation="relu"))
+  model.add(Dense(50,activation="relu"))
+  model.add(Dense(10,activation="relu"))
   model.add(Dense(1))
   model.compile(loss='mean_absolute_error', optimizer='adam')
   return model
@@ -135,7 +136,7 @@ if __name__ == "__main__":
   hist = model.fit_generator(generator,
                       verbose=1,
                       samples_per_epoch=sample_size,
-                      nb_epoch=10,
+                      nb_epoch=25,
                       validation_data=validation_generator,
                       nb_val_samples=validation_size)
   print(hist.history)
