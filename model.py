@@ -162,6 +162,6 @@ if __name__ == "__main__":
                       nb_epoch=15,
                       validation_data=validation_generator,
                       nb_val_samples=validation_size,
-                             callbacks=list(checkpoint, earlystop))
+                             callbacks=[checkpoint, earlystop])
   print(hist.history)
   model.save('model.h5')
