@@ -7,6 +7,10 @@
 [broken_dist]: ./pictures/broken_distribution.png
 [good_dist]: ./pictures/corrected_distribution.png
 [final_dist]: ./pictures/final_dist.png
+[example1]: ./pictures/example1.png
+[example2]: ./pictures/example2.png
+[example3]: ./pictures/example3.png
+[example4]: ./pictures/example4.png
 
 ## Changes after review
 
@@ -22,12 +26,11 @@ changes here:
 - I added `relu` activation functions in all convolutional and fully
   connected layers.
 - I added two dropout layers each dropping 10 % of the data. I don't see
-  a significant of this though. I am also observing the validation
-  loss separately and stop early when it does not improve anymore via
-  callbacks. I don't think overfitting is a problem here.
-- At some point I change the minimal angle when to consider an image to
-  `0.0001` and the left/right correction factor to `0.10` but I don't think
-  it makes a big difference.
+  a significant effect of this though. I am also observing the
+  validation loss separately and stop early when it does not improve
+  anymore via callbacks. I don't think overfitting is a problem here.
+- At some point I changed the minimal angle when to consider an image to
+  `0.0001` but I don't think it makes a big difference.
 - I tried to help the model generalize by adding data from the second
   track but this didn't seem to help so I didn't use it in the final
   version
@@ -36,7 +39,8 @@ changes here:
   `BGR` as cv2.imread, so I added the conversion to `RGB` in the
   training.
 
-I adapted the report below to correspond the latest version.
+I adapted the report below to correspond the latest version. I also
+added the required example images from the data set.
 
 ## Files Submitted & Code Quality
 
@@ -47,7 +51,7 @@ My project includes the following files:
 * `drive.py` for driving the car in autonomous mode
 * `model.h5` containing a trained convolution neural network
 * `writeup_report.md` or writeup_report.pdf summarizing the results
-* [Video of this model driving](https://www.youtube.com/watch?v=oHLq4uueTrw)
+* `run1.mp4` video of this model driving
 
 ### 2. Submission includes functional code
 Using the Udacity provided simulator and my `drive.py` file, the car can
@@ -74,7 +78,8 @@ architecture of the [NVIDIA blog post].
 The data is normalized in the model using a Keras lambda layer and
 cropped at the top and bottom.
 The neural network itself consists of five convolutional layers, each
-followed by a nonlinear RELU function, and four fully connected layers.
+followed by a nonlinear RELU function, and four fully connected layers,
+also followed by nonlinear RELU functions.
 The first three layers have a 2x2 stride with a 5x5 kernel followed by
 two layers with a 3x3 kernel without stride.
 These configurations have been found empirically by the NVIDIA team.
@@ -84,14 +89,14 @@ These configurations have been found empirically by the NVIDIA team.
 The model was trained and validated on five different data sets to ensure
 that the model was not overfitting. The model was tested by running it
 through the simulator and ensuring that the vehicle could stay on the
-track.
+track *without touching the line with any part of the vehicle*.
 
 ### Model parameter tuning
 
-The model used an Adam optimizer, so the learning rate was not tuned
-manually. As an error measure, I chose `mean_absolute_error` to
-encourage the network to take a turn as errors are less heavily
-penalized than with `mean_squared_error`.
+The model used an Adam optimizer with a lowered learning rate of `1E-4`.
+As an error measure, I chose `mean_absolute_error` to encourage the
+network to take a turn as errors are less heavily penalized than with
+`mean_squared_error`.
 
 ### Creation of appropriate training data & training process
 
@@ -100,27 +105,35 @@ and then added my behavior in the corners where it was necessary.
 The test data got me until the dirt corner where the model preferred
 the offroad path. Thus I added some samples around this corner
 (`dirtcorner`). This threw it off-balance though, so I added some more
-content with `more` and `dirt_extra`.
+content with `more` and `dirt_extra`. Finally, I added one more full
+round labelled `moar`.
 
 To add recovery scenarios without recording to many of my likely flawed
 behavior, I added the side camera images with a correction factor of
 `0.10`. The factor was found experimentally by checking the driving
 behavior.
 
-After initial collection process, I had ~30.000 number of data points.
-The preprocessing has been done in the first layer of the model as
-described above. I randomly shuffled the data set and put 20% of the
-data into a validation set.
+Here are some example images from the data sets:
+![alt text][example1]
+![alt text][example2]
+And from the left
+![alt text][example3]
+and right
+![alt text][example4]
+
+After initial collection process, I had almost ~60.000 data points.  The
+preprocessing has been done in the first layer of the model as described
+above. I also randomly shuffled the data set.
 
 ### Solution Design Approach
 
 I was fairly confident in the NVIDIA architecture as it is a simple
 set of layers that was already tested on real streets.
 
-To monitor overfitting, I chose a validation split of 0.2. This showed
-that while the training loss did still improve slightly with more
-epochs, validation loss was saturated quickly. To have quicker
-iterations and avoid overfitting, I thus only chose 3 epochs.
+To monitor overfitting, I kept track of a separate validation round.
+This showed that while the training loss did still improve slightly with
+more epochs, validation loss saturated eventually. The final model is
+the result of saving only the last version where it still improved.
 
 One major finding in analyzing problems with the model was that my test
 set was dominated by *lazy straight ahead driving*:
@@ -147,7 +160,7 @@ visualization of the architecture
 
 The final training looks like this
 ```
-Train on 59800 samples, validate on ? samples
+Train on 59800 samples, validate on 12600 samples
 Epoch 2/15
 59600/59800 [============================>.] - val_loss improved from 0.07234 to 0.06671, saving model to weights.01-0.07.hdf5
 59800/59800 [==============================] - 119s - loss: 0.0807 - val_loss: 0.0667

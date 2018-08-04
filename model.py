@@ -12,19 +12,18 @@ from itertools import *
 from keras.models import *
 from keras.layers import *
 from keras import *
-# import theano
-# theano.config.openmp = True
 
 SEED = 1337  # for reproducibility
 np.random.seed(SEED)
 batch_size = 200
+
 
 def load_image(folder, source_path):
   filename = os.path.basename(source_path)
   new_path = folder + 'IMG/' + filename
   image = cv2.imread(new_path) # this is in BGR format
   image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-  return image      # this is now RGB just like the fucking drive.py does it
+  return image      # this is now RGB, so in the same format as drive.py
 
 
 def load_csv(folder):
@@ -61,11 +60,13 @@ def batch(generator, size=batch_size):
       yield np.array(acc_x), np.array(acc_y)
       acc_x, acc_y = [], []
 
+
 def shuffle(a,b):
   c = list(zip(a, b))
   random.shuffle(c)
   a, b = zip(*c)
   return (a, b)
+
 
 def batch_endless(generator, size=batch_size):
   gen, gen_backed = tee(generator)
