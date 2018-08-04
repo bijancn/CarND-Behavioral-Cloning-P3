@@ -11,6 +11,7 @@ import itertools as it
 from itertools import *
 from keras.models import *
 from keras.layers import *
+from keras import *
 # import theano
 # theano.config.openmp = True
 
@@ -85,12 +86,15 @@ def load_data(batch_func=batch):
   generator_dirt = load_csv('dirtcorner/')
   generator_dirt_extra = load_csv('dirt_extra/')
   generator_extra = load_csv('more/')
-  generator_jungle = load_csv('jungle/')
+  # generator_jungle = load_csv('jungle/')
   generator_moar = load_csv('moar/')
   # generator_extra_round = load_csv('extra_round/')
-  generator = chain(generator_train, generator_dirt,
-                    generator_dirt_extra, generator_extra,
-                    generator_jungle, generator_moar)
+  generator = chain(generator_train,
+                    generator_dirt,
+                    generator_dirt_extra,
+                    generator_extra,
+                    #  generator_jungle,
+                    generator_moar)
   return batch_func(generator)
 
 
@@ -114,7 +118,8 @@ def setup_model():
   model.add(Dense(50,activation="relu"))
   model.add(Dense(10,activation="relu"))
   model.add(Dense(1))
-  model.compile(loss='mean_absolute_error', optimizer='adam')
+  adam = optimizers.Adam(lr=0.0001)
+  model.compile(loss='mean_absolute_error', optimizer=adam)
   return model
 
 
@@ -142,12 +147,21 @@ if __name__ == "__main__":
   validation_size = analyze_angles(batch(load_csv('extra_round/')))
   generator = load_data(batch_func=batch_endless)
   validation_generator = batch_endless(load_csv('extra_round/'))
+  checkpoint = callbacks.ModelCheckpoint("weights.{epoch:02d}-{val_loss:.2f}.hdf5",
+                            monitor='val_loss',
+                            verbose=1,
+                            save_best_only=True,
+                            save_weights_only=False,
+                            mode='auto',
+                            period=1)
+  earlystop = callbacks.EarlyStopping(monitor='val_loss', min_delta=0.0001,
+                                      patience=3, verbose=1, mode='auto')
   hist = model.fit_generator(generator,
                       verbose=1,
                       samples_per_epoch=sample_size,
-                      nb_epoch=25,
+                      nb_epoch=15,
                       validation_data=validation_generator,
-                      nb_val_samples=validation_size)
+                      nb_val_samples=validation_size,
+                             callbacks=list(checkpoint, earlystop))
   print(hist.history)
-#  nb_val_samples=len(validation_samples)//BATCH_SIZE
   model.save('model.h5')
