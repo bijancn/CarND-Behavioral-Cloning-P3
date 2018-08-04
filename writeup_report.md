@@ -7,10 +7,10 @@
 [broken_dist]: ./pictures/broken_distribution.png
 [good_dist]: ./pictures/corrected_distribution.png
 [final_dist]: ./pictures/final_dist.png
-[example1]: ./pictures/example1.png
-[example2]: ./pictures/example2.png
-[example3]: ./pictures/example3.png
-[example4]: ./pictures/example4.png
+[example1]: ./pictures/example1.jpg
+[example2]: ./pictures/example2.jpg
+[example3]: ./pictures/example3.jpg
+[example4]: ./pictures/example4.jpg
 
 ## Changes after review
 
