@@ -123,7 +123,7 @@ def setup_model():
   return model
 
 
-def analyze_angles(generator):
+def analyze_angles(generator, filename):
   length = 0
   Y_train = []
   for x_array, y_array in generator:
@@ -135,16 +135,16 @@ def analyze_angles(generator):
   sample_size = length
   print ("Mean of steering angles: ", np.mean(Y_train))
   print ("Sample size: ", sample_size)
-  # sb.distplot(Y_train.flatten())
-  # plt.savefig('dist.png')
+  sb.distplot(Y_train.flatten())
+  plt.savefig(filename)
   return sample_size
 
 
 if __name__ == "__main__":
   model = setup_model()
   generator = load_data()
-  sample_size = analyze_angles(generator)
-  validation_size = analyze_angles(batch(load_csv('extra_round/')))
+  sample_size = analyze_angles(generator, 'dist.png')
+  validation_size = analyze_angles(batch(load_csv('extra_round/')), 'validation_dist.png')
   generator = load_data(batch_func=batch_endless)
   validation_generator = batch_endless(load_csv('extra_round/'))
   checkpoint = callbacks.ModelCheckpoint("weights.{epoch:02d}-{val_loss:.2f}.hdf5",

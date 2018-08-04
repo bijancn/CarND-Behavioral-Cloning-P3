@@ -7,6 +7,22 @@
 [broken_dist]: ./pictures/broken_distribution.png
 [good_dist]: ./pictures/corrected_distribution.png
 
+## Changes after review
+
+After the review, I had to rework major aspects of this project to get
+it to finally work. I think the first version was just accidentally
+almost good enough. Some of the experiments are documented in a horrible
+format in the [lab journal](lab_journal.md). I try to summarize the
+changes here:
+
+- I made use of keras `fit_generator`. 
+
+- At some point I change the minimal angle when to consider an image to
+  `0.0001` and the left/right correction factor to `0.10` but I don't think
+  it makes a big difference.
+
+I adapted the report below to correspond the latest version.
+
 ## Files Submitted & Code Quality
 
 ### 1. Submission includes all required files
@@ -97,7 +113,7 @@ set was dominated by *lazy straight ahead driving*:
 ![alt text][broken_dist]
 
 This was however the least important piece of data I wanted the model to
-learn. Thus, I removed all images with a steering angle `< 0.001`, which
+learn. Thus, I removed all images with a steering angle `< 0.0001`, which
 was about half of the sample. This gave a lot more sensible distribution
 of steering angles:
 
@@ -112,330 +128,48 @@ visualization of the architecture
 
 The final training looks like this
 ```
-Train on 14668 samples, validate on 3668 samples
-Epoch 1/3
-14668/14668 [==============================] - 80s 5ms/step - loss: 0.0858 - val_loss: 0.0690
-Epoch 2/3
-14668/14668 [==============================] - 85s 6ms/step - loss: 0.0754 - val_loss: 0.0774
-Epoch 3/3
-14668/14668 [==============================] - 84s 6ms/step - loss: 0.0710 - val_loss: 0.0637
+Train on 59800 samples, validate on ? samples
+Epoch 2/15
+59600/59800 [============================>.] - val_loss improved from 0.07234 to 0.06671, saving model to weights.01-0.07.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0807 - val_loss: 0.0667
+Epoch 3/15
+59600/59800 [============================>.] - val_loss improved from 0.06671 to 0.06267, saving model to weights.02-0.06.hdf5
+59800/59800 [==============================] - 120s - loss: 0.0770 - val_loss: 0.0627
+Epoch 4/15
+59600/59800 [============================>.] - val_loss improved from 0.06267 to 0.06068, saving model to weights.03-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0746 - val_loss: 0.0607
+Epoch 5/15
+59600/59800 [============================>.] - val_loss improved from 0.06068 to 0.05939, saving model to weights.04-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0728 - val_loss: 0.0594
+Epoch 6/15
+59600/59800 [============================>.] - val_loss improved from 0.05939 to 0.05847, saving model to weights.05-0.06.hdf5
+59800/59800 [==============================] - 120s - loss: 0.0714 - val_loss: 0.0585
+Epoch 7/15
+59600/59800 [============================>.] - val_loss improved from 0.05847 to 0.05817, saving model to weights.06-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0704 - val_loss: 0.0582
+Epoch 8/15
+59600/59800 [============================>.] - val_loss improved from 0.05817 to 0.05789, saving model to weights.07-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0698 - val_loss: 0.0579
+Epoch 9/15
+59600/59800 [============================>.] - val_loss improved from 0.05789 to 0.05766, saving model to weights.08-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0692 - val_loss: 0.0577
+Epoch 10/15
+59600/59800 [============================>.] - val_loss improved from 0.05766 to 0.05721, saving model to weights.09-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0686 - val_loss: 0.0572
+Epoch 11/15
+59600/59800 [============================>.] - val_loss improved from 0.05721 to 0.05706, saving model to weights.10-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0675 - val_loss: 0.0571
+Epoch 12/15
+59600/59800 [============================>.] - val_loss improved from 0.05706 to 0.05665, saving model to weights.11-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0667 - val_loss: 0.0566
+Epoch 13/15
+59600/59800 [============================>.] - val_loss improved from 0.05665 to 0.05661, saving model to weights.12-0.06.hdf5
+59800/59800 [==============================] - 119s - loss: 0.0657 - val_loss: 0.0566
+Epoch 14/15
+59600/59800 [============================>.] - val_loss did not improve
+59800/59800 [==============================] - 119s - loss: 0.0651 - val_loss: 0.0568
+Epoch 15/15
+59600/59800 [============================>.] - val_loss did not improve
+59800/59800 [==============================] - 119s - loss: 0.0642 - val_loss: 0.0576
 ```
 
-
-### 2018-06-30 12:54
-Loss doesnt go below 0.07. It looks like more epochs could help
-Time:
-real    22m47.518s
-user    14m3.780s
-sys     5m21.340s
-Epoch 1693/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.1971                                                                                                                                                                      Epoch 1694/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.1032                                                                                                                                                                      Epoch 1695/1695                                                                                                                                                                                                                   200/200 [==============================] - 0s - loss: 0.2520
-
-Model drives almost straight and thus goes out on the right side
-
-### 2018-06-30 12:54
-#### Changes
-- Increased epochs from 5 to 7
-- samples_per_epoch=sample_size and nb_epochs=7
-#### Observations
-- Now we have about 4 minutes per epoch and more constant loss result
-
-Epoch 1/7
-67800/67800 [==============================] - 262s - loss: 0.2152
-Epoch 2/7
-67800/67800 [==============================] - 258s - loss: 0.1921
-Epoch 3/7
-67800/67800 [==============================] - 258s - loss: 0.1811
-Epoch 4/7
-67800/67800 [==============================] - 258s - loss: 0.1761
-Epoch 5/7
-67800/67800 [==============================] - 258s - loss: 0.1882
-Epoch 6/7
-67800/67800 [==============================] - 258s - loss: 0.1760
-Epoch 7/7
-67800/67800 [==============================] - 258s - loss: 0.1665
-
-So it still improves even in the 7th epoch
-
-Model driving behavior has improved somewhat but still makes a pretty
-dumb impression
-#### Conclusions
-- So probably no performance change from the reorganization
-- More epochs could still help
-
-### 2018-06-30 13:31
-#### Changes
-- Increased epochs from 7 to 10
-- Removed straight driving filter and left and right images
-#### Observations
-Epoch 1/10
-37200/37200 [==============================] - 149s - loss: 0.1910
-Epoch 2/10
-37200/37200 [==============================] - 144s - loss: 0.1327
-Epoch 3/10
-37200/37200 [==============================] - 144s - loss: 0.1253
-Epoch 4/10
-37200/37200 [==============================] - 144s - loss: 0.1267
-Epoch 5/10
-37200/37200 [==============================] - 144s - loss: 0.1203
-Epoch 6/10
-37200/37200 [==============================] - 144s - loss: 0.1162
-Epoch 7/10
-37200/37200 [==============================] - 144s - loss: 0.1264
-Epoch 8/10
-37200/37200 [==============================] - 144s - loss: 0.1220
-Epoch 9/10
-37200/37200 [==============================] - 144s - loss: 0.1189
-Epoch 10/10
-37200/37200 [==============================] - 144s - loss: 0.1188
-
-Model actively stears off to the right side.
-#### Conclusions
-- While the loss itself is lower the behavior looked straight up wrong
-
-### 2018-06-30 14:46
-#### Changes
-- Increased epochs from 10 to 20
-- Readded left and right images (kept straight driving filter out)
-#### Observations
-Epoch 1/20
-111600/111600 [==============================] - 437s - loss: 0.1716
-Epoch 2/20
-111600/111600 [==============================] - 436s - loss: 0.1527
-Epoch 3/20
-111600/111600 [==============================] - 438s - loss: 0.1435
-Epoch 4/20
-111600/111600 [==============================] - 442s - loss: 0.1529
-Epoch 5/20
-111600/111600 [==============================] - 435s - loss: 0.1394
-Epoch 6/20
-111600/111600 [==============================] - 446s - loss: 0.1498
-Epoch 7/20
-111600/111600 [==============================] - 443s - loss: 0.1495
-Epoch 8/20
-111600/111600 [==============================] - 436s - loss: 0.1489
-Epoch 9/20
-111600/111600 [==============================] - 433s - loss: 0.1421
-Epoch 10/20
-111600/111600 [==============================] - 433s - loss: 0.1405
-Epoch 11/20
-111600/111600 [==============================] - 436s - loss: 0.1502
-Epoch 12/20
-111600/111600 [==============================] - 448s - loss: 0.1500
-Epoch 13/20
-111600/111600 [==============================] - 458s - loss: 0.1539
-Epoch 14/20
-111600/111600 [==============================] - 447s - loss: 0.1528
-Epoch 15/20
-111600/111600 [==============================] - 460s - loss: 0.1512
-Epoch 16/20
-111600/111600 [==============================] - 477s - loss: 0.1371
-Epoch 17/20
-111600/111600 [==============================] - 478s - loss: 0.1243
-Epoch 18/20
-111600/111600 [==============================] - 444s - loss: 0.1269
-Epoch 19/20
-111600/111600 [==============================] - 446s - loss: 0.1192
-Epoch 20/20
-111600/111600 [==============================] - 438s - loss: 0.1124
-
-Car steered crazily to the right side. It looks to me like this was the
-straight-ahead right/left copy that thought the model that.
-
-### Ideas to improve
-
-These two are correlated
-- Try if it improves without filtering the straight driving
-- Try if it improves without left and right images
-
-- Make more data?
-- More dropout? Less dropout? Currently we drop 10 % twice
-- Is the shuffling really working? Is it important?
-
-### Bad ideas
-- Increase batch size a bit to squeeze out more performance. 200 works,
-  1000 does not. Naah nvidia-smi shows 3805MiB /  4036MiB
-
-
-
-### Best model so far
-Epoch 1/10  78400/78400 [==============================] - 259s - loss: 0.2029 - val_loss: 0.1169
-Epoch 2/10  78400/78400 [==============================] - 201s - loss: 0.1715 - val_loss: 0.1162
-Epoch 3/10  78400/78400 [==============================] - 200s - loss: 0.1792 - val_loss: 0.1155
-Epoch 4/10  78400/78400 [==============================] - 200s - loss: 0.1665 - val_loss: 0.1151
-Epoch 5/10  78400/78400 [==============================] - 201s - loss: 0.1613 - val_loss: 0.1168
-Epoch 6/10  78400/78400 [==============================] - 200s - loss: 0.1472 - val_loss: 0.0888
-Epoch 7/10  78400/78400 [==============================] - 200s - loss: 0.1270 - val_loss: 0.0739
-Epoch 8/10  78400/78400 [==============================] - 200s - loss: 0.1250 - val_loss: 0.0853
-Epoch 9/10  78400/78400 [==============================] - 199s - loss: 0.1194 - val_loss: 0.0658
-Epoch 10/10 78400/78400 [==============================] - 199s - loss: 0.1110 - val_loss: 0.0670
-
-With left and right images, flipped and moar data
-Drives pretty okay but failed on bridge + dirtcorner (is too far left
-before the curve starts)
-
-Without left and right it sucks
-
-### New best (by training longer)
-78400/78400             [==============================] - 201s - loss: 0.1809 - val_loss: 0.1175
-Epoch 2/20 78400/78400  [==============================] - 196s - loss: 0.1622 - val_loss: 0.1160
-Epoch 3/20 78400/78400  [==============================] - 197s - loss: 0.1667 - val_loss: 0.1255
-Epoch 4/20 78400/78400  [==============================] - 196s - loss: 0.1656 - val_loss: 0.1154
-Epoch 5/20 78400/78400  [==============================] - 196s - loss: 0.1639 - val_loss: 0.1212
-Epoch 6/20 78400/78400  [==============================] - 196s - loss: 0.1636 - val_loss: 0.1157
-Epoch 7/20 78400/78400  [==============================] - 196s - loss: 0.1443 - val_loss: 0.0874
-Epoch 8/20 78400/78400  [==============================] - 196s - loss: 0.1363 - val_loss: 0.0791
-Epoch 9/20 78400/78400  [==============================] - 196s - loss: 0.1250 - val_loss: 0.0785
-Epoch 10/20 78400/78400 [==============================] - 196s - loss: 0.1224 - val_loss: 0.0748
-Epoch 11/20 78400/78400 [==============================] - 196s - loss: 0.1167 - val_loss: 0.0799
-Epoch 12/20 78400/78400 [==============================] - 196s - loss: 0.1212 - val_loss: 0.0767
-Epoch 13/20 78400/78400 [==============================] - 196s - loss: 0.1168 - val_loss: 0.0679
-Epoch 14/20 78400/78400 [==============================] - 196s - loss: 0.1149 - val_loss: 0.0676
-78400/78400             [==============================] - 196s - loss: 0.1102 - val_loss: 0.0663 Epoch 16/20
-78400/78400             [==============================] - 196s - loss: 0.1106 - val_loss: 0.0638 Epoch 17/20
-78400/78400             [==============================] - 196s - loss: 0.1093 - val_loss: 0.0664
-Epoch 18/20 78400/78400 [==============================] - 196s - loss: 0.1089 - val_loss: 0.0663
-Epoch 19/20 78400/78400 [==============================] - 196s - loss: 0.1078 - val_loss: 0.0637
-Epoch 20/20 78400/78400 [==============================] - 196s - loss: 0.1078 - val_loss: 0.0642
-
-### slight improvement with relu instead of tanh and without dropout
-Epoch 2/25 78400/78400 [==============================] - 186s - loss: 0.1204 - val_loss: 0.0823
-Epoch 3/25 78400/78400 [==============================] - 185s - loss: 0.1162 - val_loss: 0.0640
-Epoch 4/25 78400/78400 [==============================] - 185s - loss: 0.1120 - val_loss: 0.0757
-Epoch 5/25 78400/78400 [==============================] - 185s - loss: 0.1073 - val_loss: 0.0615
-Epoch 6/25 78400/78400 [==============================] - 185s - loss: 0.1089 - val_loss: 0.0714
-Epoch 7/25 78400/78400 [==============================] - 185s - loss: 0.1074 - val_loss: 0.0625
-Epoch 8/25 78400/78400 [==============================] - 185s - loss: 0.1060 - val_loss: 0.0667
-Epoch 9/25 78400/78400 [==============================] - 185s - loss: 0.1021 - val_loss: 0.0610
-Epoch 10/25 78400/78400 [==============================] - 184s - loss: 0.0997 - val_loss: 0.0602
-Epoch 11/25 78400/78400 [==============================] - 184s - loss: 0.0979 - val_loss: 0.0631
-Epoch 12/25 78400/78400 [==============================] - 184s - loss: 0.0974 - val_loss: 0.0613
-Epoch 13/25 78400/78400 [==============================] - 184s - loss: 0.0944 - val_loss: 0.0610
-Epoch 14/25 78400/78400 [==============================] - 184s - loss: 0.0944 - val_loss: 0.0870
-Epoch 15/25 78400/78400 [==============================] - 184s - loss: 0.0940 - val_loss: 0.0601
-Epoch 16/25 78400/78400 [==============================] - 184s - loss: 0.0929 - val_loss: 0.0590
-Epoch 17/25 78400/78400 [==============================] - 184s - loss: 0.1036 - val_loss: 0.0627
-Epoch 18/25 78400/78400 [==============================] - 184s - loss: 0.0949 - val_loss: 0.0616
-Epoch 19/25 78400/78400 [==============================] - 186s - loss: 0.0909 - val_loss: 0.0600
-Epoch 20/25 78400/78400 [==============================] - 184s - loss: 0.0898 - val_loss: 0.0597
-Epoch 21/25 78400/78400 [==============================] - 188s - loss: 0.0890 - val_loss: 0.0689
-Epoch 22/25 78400/78400 [==============================] - 189s - loss: 0.0887 - val_loss: 0.0596
-Epoch 23/25 78400/78400 [==============================] - 190s - loss: 0.0877 - val_loss: 0.0604
-Epoch 24/25 78400/78400 [==============================] - 191s - loss: 0.0862 - val_loss: 0.0592
-Epoch 25/25 78400/78400 [==============================] - 190s - loss: 0.0849 - val_loss: 0.0603
-
-got past the dirt corner but went off course afterwards
-
-### full round again with only one touch of the line
-78400/78400 [==============================] - 150s - loss: 0.1394 - val_loss: 0.0840
-Epoch 2/25
-78400/78400 [==============================] - 150s - loss: 0.1204 - val_loss: 0.0813
-Epoch 3/25
-78400/78400 [==============================] - 150s - loss: 0.1163 - val_loss: 0.0723
-Epoch 4/25
-78400/78400 [==============================] - 150s - loss: 0.1112 - val_loss: 0.0675
-Epoch 5/25
-78400/78400 [==============================] - 149s - loss: 0.1105 - val_loss: 0.0734
-Epoch 6/25
-78400/78400 [==============================] - 150s - loss: 0.1139 - val_loss: 0.0847
-Epoch 7/25
-78400/78400 [==============================] - 149s - loss: 0.1094 - val_loss: 0.0655
-Epoch 8/25
-78400/78400 [==============================] - 149s - loss: 0.1062 - val_loss: 0.0687
-Epoch 9/25
-78400/78400 [==============================] - 149s - loss: 0.1048 - val_loss: 0.0662
-Epoch 10/25
-78400/78400 [==============================] - 149s - loss: 0.1024 - val_loss: 0.0679
-Epoch 11/25
-78400/78400 [==============================] - 149s - loss: 0.1009 - val_loss: 0.0659
-Epoch 12/25
-78400/78400 [==============================] - 149s - loss: 0.0987 - val_loss: 0.0665
-Epoch 13/25
-78400/78400 [==============================] - 149s - loss: 0.0992 - val_loss: 0.0652
-Epoch 14/25
-78400/78400 [==============================] - 149s - loss: 0.0967 - val_loss: 0.0650
-Epoch 15/25
-78400/78400 [==============================] - 149s - loss: 0.0947 - val_loss: 0.0658
-Epoch 16/25
-78400/78400 [==============================] - 149s - loss: 0.0923 - val_loss: 0.0650
-Epoch 17/25
-78400/78400 [==============================] - 148s - loss: 0.0935 - val_loss: 0.0631
-Epoch 18/25
-78400/78400 [==============================] - 149s - loss: 0.0945 - val_loss: 0.0644
-Epoch 19/25
-78400/78400 [==============================] - 148s - loss: 0.0921 - val_loss: 0.0637
-Epoch 20/25
-78400/78400 [==============================] - 149s - loss: 0.0900 - val_loss: 0.0634
-Epoch 21/25
-78400/78400 [==============================] - 148s - loss: 0.0905 - val_loss: 0.0613
-Epoch 22/25
-78400/78400 [==============================] - 147s - loss: 0.0884 - val_loss: 0.0628
-Epoch 23/25
-78400/78400 [==============================] - 148s - loss: 0.0932 - val_loss: 0.0601
-Epoch 24/25
-78400/78400 [==============================] - 148s - loss: 0.0883 - val_loss: 0.0608
-Epoch 25/25
-78400/78400 [==============================] - 147s - loss: 0.0876 - val_loss: 0.0666
-
-Results with the Adam optimizer and without jungle
-======================================
-Epoch 2/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0826Epoch 00001: val_loss improved from 0.07488 to 0.07225, saving model to weights.01-0.07.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0824 - val_loss: 0.0722
-Epoch 3/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0794Epoch 00002: val_loss improved from 0.07225 to 0.06842, saving model to weights.02-0.07.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0793 - val_loss: 0.0684
-Epoch 4/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0764Epoch 00003: val_loss improved from 0.06842 to 0.06450, saving model to weights.03-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0763 - val_loss: 0.0645
-Epoch 5/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0740Epoch 00004: val_loss improved from 0.06450 to 0.06250, saving model to weights.04-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0739 - val_loss: 0.0625
-Epoch 6/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0722Epoch 00005: val_loss improved from 0.06250 to 0.06008, saving model to weights.05-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0720 - val_loss: 0.0601
-Epoch 7/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0705Epoch 00006: val_loss improved from 0.06008 to 0.05909, saving model to weights.06-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0704 - val_loss: 0.0591
-Epoch 8/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0693Epoch 00007: val_loss improved from 0.05909 to 0.05817, saving model to weights.07-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0692 - val_loss: 0.0582
-Epoch 9/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0684Epoch 00008: val_loss improved from 0.05817 to 0.05760, saving model to weights.08-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0683 - val_loss: 0.0576
-Epoch 10/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0677Epoch 00009: val_loss improved from 0.05760 to 0.05732, saving model to weights.09-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0676 - val_loss: 0.0573
-Epoch 11/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0669Epoch 00010: val_loss improved from 0.05732 to 0.05730, saving model to weights.10-0.06.hdf5
-59800/59800 [==============================] - 114s - loss: 0.0667 - val_loss: 0.0573
-Epoch 12/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0663Epoch 00011: val_loss did not improve
-59800/59800 [==============================] - 114s - loss: 0.0662 - val_loss: 0.0584
-Epoch 13/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.0653Epoch 00012: val_loss did not improve
-59800/59800 [==============================] - 114s - loss: 0.0652 - val_loss: 0.0582
-
-Going up to 0.20 correction factor
-======================================
-Epoch 2/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.1137Epoch 00001: val_loss improved from 0.13082 to 0.12129, saving model to weights.01-0.12.hdf5
-59800/59800 [==============================] - 117s - loss: 0.1137 - val_loss: 0.1213
-Epoch 3/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.1108Epoch 00002: val_loss improved from 0.12129 to 0.10900, saving model to weights.02-0.11.hdf5
-59800/59800 [==============================] - 117s - loss: 0.1108 - val_loss: 0.1090
-Epoch 4/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.1066Epoch 00003: val_loss did not improve
-59800/59800 [==============================] - 117s - loss: 0.1065 - val_loss: 0.1099
-Epoch 5/15
-59600/59800 [============================>.] - ETA: 0s - loss: 0.1044 j
-Epoch 00004: val_loss improved from 0.10900 to 0.10613, saving model to weights.04-0.11.hdf5
-59800/59800 [==============================] - 118s - loss: 0.1043 - val_loss: 0.1061
-
-=> A LOT WORSE! Aborting and reverting!
-
-Converting training images to RGB from BGR
-======================================
-First perfect round!
-
-Now trying the same with some dropout to make the reviewer happy
-======================================
