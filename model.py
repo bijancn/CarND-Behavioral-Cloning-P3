@@ -99,12 +99,12 @@ def load_data(batch_func=batch):
 
 
 def setup_model():
-  # fraction_to_drop = 0.10
+  fraction_to_drop = 0.10
   model = Sequential()
   model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)))
   # 50 from top, 20 from bottom, nothing from the sides
   model.add(Cropping2D(cropping=((70,25), (0,0))))
-  # model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
+  model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
   # 5 conv nets
   model.add(Convolution2D(24,5,5,subsample=(2,2),activation="relu"))
   model.add(Convolution2D(36,5,5,subsample=(2,2),activation="relu"))
@@ -112,7 +112,7 @@ def setup_model():
   model.add(Convolution2D(64,3,3,activation="relu"))
   model.add(Convolution2D(64,3,3,activation="relu"))
   model.add(Flatten())
-  # model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
+  model.add(Dropout(fraction_to_drop, noise_shape=None, seed=SEED))
   # 4 fully connected
   model.add(Dense(100,activation="relu"))
   model.add(Dense(50,activation="relu"))

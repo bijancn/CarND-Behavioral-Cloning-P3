@@ -435,3 +435,7 @@ Epoch 00004: val_loss improved from 0.10900 to 0.10613, saving model to weights.
 
 Converting training images to RGB from BGR
 ======================================
+First perfect round!
+
+Now trying the same with some dropout to make the reviewer happy
+======================================
