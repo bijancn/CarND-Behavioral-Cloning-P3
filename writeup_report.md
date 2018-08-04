@@ -6,6 +6,7 @@
 [NVIDIA blog post]: https://devblogs.nvidia.com/deep-learning-self-driving-cars/
 [broken_dist]: ./pictures/broken_distribution.png
 [good_dist]: ./pictures/corrected_distribution.png
+[final_dist]: ./pictures/final_dist.png
 
 ## Changes after review
 
@@ -15,11 +16,25 @@ almost good enough. Some of the experiments are documented in a horrible
 format in the [lab journal](lab_journal.md). I try to summarize the
 changes here:
 
-- I made use of keras `fit_generator`. 
-
+- I made use of keras `fit_generator`. For this I had to chain the
+  generators for different files together and implement a batching and
+  shuffle solution.
+- I added `relu` activation functions in all convolutional and fully
+  connected layers.
+- I added two dropout layers each dropping 10 % of the data. I don't see
+  a significant of this though. I am also observing the validation
+  loss separately and stop early when it does not improve anymore via
+  callbacks. I don't think overfitting is a problem here.
 - At some point I change the minimal angle when to consider an image to
   `0.0001` and the left/right correction factor to `0.10` but I don't think
   it makes a big difference.
+- I tried to help the model generalize by adding data from the second
+  track but this didn't seem to help so I didn't use it in the final
+  version
+- I did add one more lap and used another one as validation set.
+- Finally, I realized that the `drive.py` works in `RGB` and not in
+  `BGR` as cv2.imread, so I added the conversion to `RGB` in the
+  training.
 
 I adapted the report below to correspond the latest version.
 
@@ -66,7 +81,7 @@ These configurations have been found empirically by the NVIDIA team.
 
 ### Attempts to reduce overfitting in the model
 
-The model was trained and validated on four different data sets to ensure
+The model was trained and validated on five different data sets to ensure
 that the model was not overfitting. The model was tested by running it
 through the simulator and ensuring that the vehicle could stay on the
 track.
@@ -118,6 +133,10 @@ was about half of the sample. This gave a lot more sensible distribution
 of steering angles:
 
 ![alt text][good_dist]
+
+The final distribution of the data used, looks like this
+
+![alt text][final_dist]
 
 ### Final Model Architecture
 
