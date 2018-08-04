@@ -2,7 +2,7 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-- [Video of this model driving](https://www.youtube.com/watch?v=oHLq4uueTrw)
+- [Video of this model driving](run1.mp4)
 
 - [Writeup](writeup_report.md)
 
