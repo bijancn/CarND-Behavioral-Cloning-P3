@@ -22,8 +22,9 @@ batch_size = 200
 def load_image(folder, source_path):
   filename = os.path.basename(source_path)
   new_path = folder + 'IMG/' + filename
-  image = cv2.imread(new_path)
-  return image # this is in BGR format
+  image = cv2.imread(new_path) # this is in BGR format
+  image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+  return image      # this is now RGB just like the fucking drive.py does it
 
 
 def load_csv(folder):
@@ -32,7 +33,7 @@ def load_csv(folder):
     reader = csv.reader(csvfile)
     lines = [l for l in reader]
     lines = lines[1:] # first line was a header in test data
-    correction = 0.20
+    correction = 0.10
     for l in lines:
       center_angle = float(l[3])
       if abs(center_angle) > 0.0001:     # ignore lazy straight driving

@@ -417,3 +417,21 @@ Epoch 13/15
 
 Going up to 0.20 correction factor
 ======================================
+Epoch 2/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.1137Epoch 00001: val_loss improved from 0.13082 to 0.12129, saving model to weights.01-0.12.hdf5
+59800/59800 [==============================] - 117s - loss: 0.1137 - val_loss: 0.1213
+Epoch 3/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.1108Epoch 00002: val_loss improved from 0.12129 to 0.10900, saving model to weights.02-0.11.hdf5
+59800/59800 [==============================] - 117s - loss: 0.1108 - val_loss: 0.1090
+Epoch 4/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.1066Epoch 00003: val_loss did not improve
+59800/59800 [==============================] - 117s - loss: 0.1065 - val_loss: 0.1099
+Epoch 5/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.1044 j
+Epoch 00004: val_loss improved from 0.10900 to 0.10613, saving model to weights.04-0.11.hdf5
+59800/59800 [==============================] - 118s - loss: 0.1043 - val_loss: 0.1061
+
+=> A LOT WORSE! Aborting and reverting!
+
+Converting training images to RGB from BGR
+======================================
