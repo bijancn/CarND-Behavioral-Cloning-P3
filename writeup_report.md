@@ -375,3 +375,45 @@ Epoch 24/25
 78400/78400 [==============================] - 148s - loss: 0.0883 - val_loss: 0.0608
 Epoch 25/25
 78400/78400 [==============================] - 147s - loss: 0.0876 - val_loss: 0.0666
+
+Results with the Adam optimizer and without jungle
+======================================
+Epoch 2/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0826Epoch 00001: val_loss improved from 0.07488 to 0.07225, saving model to weights.01-0.07.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0824 - val_loss: 0.0722
+Epoch 3/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0794Epoch 00002: val_loss improved from 0.07225 to 0.06842, saving model to weights.02-0.07.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0793 - val_loss: 0.0684
+Epoch 4/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0764Epoch 00003: val_loss improved from 0.06842 to 0.06450, saving model to weights.03-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0763 - val_loss: 0.0645
+Epoch 5/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0740Epoch 00004: val_loss improved from 0.06450 to 0.06250, saving model to weights.04-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0739 - val_loss: 0.0625
+Epoch 6/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0722Epoch 00005: val_loss improved from 0.06250 to 0.06008, saving model to weights.05-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0720 - val_loss: 0.0601
+Epoch 7/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0705Epoch 00006: val_loss improved from 0.06008 to 0.05909, saving model to weights.06-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0704 - val_loss: 0.0591
+Epoch 8/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0693Epoch 00007: val_loss improved from 0.05909 to 0.05817, saving model to weights.07-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0692 - val_loss: 0.0582
+Epoch 9/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0684Epoch 00008: val_loss improved from 0.05817 to 0.05760, saving model to weights.08-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0683 - val_loss: 0.0576
+Epoch 10/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0677Epoch 00009: val_loss improved from 0.05760 to 0.05732, saving model to weights.09-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0676 - val_loss: 0.0573
+Epoch 11/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0669Epoch 00010: val_loss improved from 0.05732 to 0.05730, saving model to weights.10-0.06.hdf5
+59800/59800 [==============================] - 114s - loss: 0.0667 - val_loss: 0.0573
+Epoch 12/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0663Epoch 00011: val_loss did not improve
+59800/59800 [==============================] - 114s - loss: 0.0662 - val_loss: 0.0584
+Epoch 13/15
+59600/59800 [============================>.] - ETA: 0s - loss: 0.0653Epoch 00012: val_loss did not improve
+59800/59800 [==============================] - 114s - loss: 0.0652 - val_loss: 0.0582
+
+Going up to 0.20 correction factor
+======================================

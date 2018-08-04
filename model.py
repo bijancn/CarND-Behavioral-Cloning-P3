@@ -32,7 +32,7 @@ def load_csv(folder):
     reader = csv.reader(csvfile)
     lines = [l for l in reader]
     lines = lines[1:] # first line was a header in test data
-    correction = 0.10
+    correction = 0.20
     for l in lines:
       center_angle = float(l[3])
       if abs(center_angle) > 0.0001:     # ignore lazy straight driving
@@ -88,7 +88,6 @@ def load_data(batch_func=batch):
   generator_extra = load_csv('more/')
   # generator_jungle = load_csv('jungle/')
   generator_moar = load_csv('moar/')
-  # generator_extra_round = load_csv('extra_round/')
   generator = chain(generator_train,
                     generator_dirt,
                     generator_dirt_extra,
