@@ -114,11 +114,17 @@ behavior, I added the side camera images with a correction factor of
 behavior.
 
 Here are some example images from the data sets:
+
 ![alt text][example1]
+
 ![alt text][example2]
+
 And from the left
+
 ![alt text][example3]
+
 and right
+
 ![alt text][example4]
 
 After initial collection process, I had almost ~60.000 data points.  The
